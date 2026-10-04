@@ -1,0 +1,19 @@
+<header class="page-header">
+  <div class="header-left">
+    <h1 class="page-title" id="page-title">
+      <% if (page === 'dashboard') { %>Dashboard
+      <% } else if (page === 'notifications') { %>Notifications
+      <% } else if (page === 'applications') { %>Applications
+      <% } else if (page === 'devices') { %>Devices
+      <% } else if (page === 'statistics') { %>Statistics
+      <% } else if (page === 'settings') { %>Settings
+      <% } else { %>Veyra Monitor<% } %>
+    </h1>
+  </div>
+  <div class="header-right">
+    <div class="header-status">
+      <span class="status-dot online"></span>
+      <span class="status-text">System Online</span>
+    </div>
+  </div>
+</header>

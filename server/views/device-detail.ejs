@@ -1,0 +1,121 @@
+<%- include('layouts/header') %>
+
+<a href="/devices" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+  Back to Devices
+</a>
+
+<div class="card mb-24 animate-in">
+  <div class="flex items-center justify-between" style="margin-bottom:16px">
+    <div class="flex items-center gap-16">
+      <div class="device-avatar" style="width:56px;height:56px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <div>
+        <h2 style="font-size:1.3rem;font-weight:700"><%= device.device_name %></h2>
+        <div class="text-sm text-muted"><%= device.device_model || 'Android' %> <%= device.android_version ? '• Android ' + device.android_version : '' %></div>
+      </div>
+    </div>
+    <span class="badge <%= device.status === 'online' ? 'badge-success' : 'badge-neutral' %>"><%= device.status %></span>
+  </div>
+  <div class="device-meta">
+    <div class="device-meta-item">
+      <span class="device-meta-label">Notifications</span>
+      <span class="device-meta-value"><%= stats.notificationCount %></span>
+    </div>
+    <div class="device-meta-item">
+      <span class="device-meta-label">Active Apps</span>
+      <span class="device-meta-value"><%= stats.activeApps %></span>
+    </div>
+    <div class="device-meta-item">
+      <span class="device-meta-label">Last Seen</span>
+      <span class="device-meta-value"><%= device.last_seen_at ? new Date(device.last_seen_at).toLocaleString() : 'Never' %></span>
+    </div>
+  </div>
+</div>
+
+<div class="section-header">
+  <h2 class="section-title">App Configurations</h2>
+  <button class="btn btn-primary btn-sm" onclick="openAddConfigModal()" id="btn-add-config">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add App
+  </button>
+</div>
+
+<% if (configs.length > 0) { %>
+<div class="table-container animate-in">
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Package</th>
+        <th>Status</th>
+        <th>Capture</th>
+        <th>Parser</th>
+        <th>Webhook</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const c of configs) { %>
+        <tr id="config-row-<%= c.id %>">
+          <td style="font-weight:600;color:var(--text-primary)"><%= c.app_name %></td>
+          <td class="font-mono text-sm"><%= c.package_name %></td>
+          <td>
+            <span class="badge <%= c.enabled ? 'badge-success' : 'badge-danger' %>"><%= c.enabled ? 'ON' : 'OFF' %></span>
+          </td>
+          <td><span class="badge badge-neutral"><%= c.capture_mode %></span></td>
+          <td><span class="badge badge-primary"><%= c.parser_id %></span></td>
+          <td><span class="badge <%= c.webhook_enabled ? 'badge-success' : 'badge-neutral' %>"><%= c.webhook_enabled ? 'ON' : 'OFF' %></span></td>
+          <td>
+            <div class="flex gap-8">
+              <button class="btn btn-secondary btn-sm" onclick="toggleConfig('<%= c.id %>', <%= c.enabled ? 'false' : 'true' %>)"><%= c.enabled ? 'Disable' : 'Enable' %></button>
+              <button class="btn btn-danger btn-sm" onclick="deleteConfig('<%= c.id %>')">Remove</button>
+            </div>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% } else { %>
+<div class="empty-state animate-in">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="2"/><rect x="13" y="2" width="9" height="9" rx="2"/><rect x="2" y="13" width="9" height="9" rx="2"/><rect x="13" y="13" width="9" height="9" rx="2"/></svg>
+  <h3>No app configurations</h3>
+  <p>Add applications to monitor on this device</p>
+</div>
+<% } %>
+
+<!-- Add Config Modal -->
+<div class="modal-backdrop" id="add-config-modal">
+  <div class="modal">
+    <h3 class="modal-title">Add App to Device</h3>
+    <form id="add-config-form">
+      <input type="hidden" id="config-device-id" value="<%= device.id %>">
+      <div class="form-group">
+        <label class="form-label" for="config-app-id">Application</label>
+        <select id="config-app-id" class="form-select" required>
+          <option value="">Select application...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="config-capture-mode">Capture Mode</label>
+        <select id="config-capture-mode" class="form-select">
+          <option value="full">Full</option>
+          <option value="metadata">Metadata Only</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="config-parser">Parser</label>
+        <input type="text" id="config-parser" class="form-input" value="generic" placeholder="generic">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('add-config-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Configuration</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('layouts/footer') %>

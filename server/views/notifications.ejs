@@ -1,0 +1,87 @@
+<%- include('layouts/header') %>
+
+<form method="GET" action="/notifications" class="filters-bar" id="filters-form">
+  <div class="search-group">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" name="search" class="form-input" placeholder="Search notifications..." value="<%= filters.search || '' %>" id="search-input">
+  </div>
+  <div class="filter-group">
+    <select name="applicationId" class="form-select" id="filter-app" onchange="this.form.submit()">
+      <option value="">All Apps</option>
+      <% for (const a of apps) { %>
+      <option value="<%= a.id %>" <%= filters.applicationId === a.id ? 'selected' : '' %>><%= a.app_name %></option>
+      <% } %>
+    </select>
+  </div>
+  <div class="filter-group">
+    <select name="deviceId" class="form-select" id="filter-device" onchange="this.form.submit()">
+      <option value="">All Devices</option>
+      <% for (const d of devices) { %>
+      <option value="<%= d.id %>" <%= filters.deviceId === d.id ? 'selected' : '' %>><%= d.device_name %></option>
+      <% } %>
+    </select>
+  </div>
+  <div class="filter-group">
+    <select name="category" class="form-select" id="filter-category" onchange="this.form.submit()">
+      <option value="">All Types</option>
+      <% for (const c of categories) { %>
+      <option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= c %></option>
+      <% } %>
+    </select>
+  </div>
+</form>
+
+<% if (notifications.length > 0) { %>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Device</th>
+        <th>App</th>
+        <th>Category</th>
+        <th>Title</th>
+        <th>Text</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const n of notifications) { %>
+      <tr onclick="window.location='/notifications/<%= n.id %>'" id="notif-row-<%= n.id %>">
+        <td style="white-space:nowrap"><%= n.posted_at ? new Date(n.posted_at).toLocaleString() : '—' %></td>
+        <td><span class="badge badge-info"><%= n.device_name || '—' %></span></td>
+        <td><span class="badge badge-primary"><%= n.app_name || n.package_name %></span></td>
+        <td><span class="badge badge-neutral"><%= n.category || 'OTHER' %></span></td>
+        <td class="text-truncate"><%= n.title || '—' %></td>
+        <td class="text-truncate"><%= n.text || '—' %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if (pagination.page > 1) { %>
+    <a href="/notifications?page=<%= pagination.page - 1 %>&search=<%= filters.search || '' %>&applicationId=<%= filters.applicationId || '' %>&deviceId=<%= filters.deviceId || '' %>&category=<%= filters.category || '' %>">&laquo; Prev</a>
+  <% } else { %>
+    <span class="disabled">&laquo; Prev</span>
+  <% } %>
+
+  <% for (let p = Math.max(1, pagination.page - 3); p <= Math.min(pagination.totalPages, pagination.page + 3); p++) { %>
+    <a href="/notifications?page=<%= p %>&search=<%= filters.search || '' %>&applicationId=<%= filters.applicationId || '' %>&deviceId=<%= filters.deviceId || '' %>&category=<%= filters.category || '' %>" class="<%= p === pagination.page ? 'active' : '' %>"><%= p %></a>
+  <% } %>
+
+  <% if (pagination.page < pagination.totalPages) { %>
+    <a href="/notifications?page=<%= pagination.page + 1 %>&search=<%= filters.search || '' %>&applicationId=<%= filters.applicationId || '' %>&deviceId=<%= filters.deviceId || '' %>&category=<%= filters.category || '' %>">Next &raquo;</a>
+  <% } else { %>
+    <span class="disabled">Next &raquo;</span>
+  <% } %>
+</div>
+<% } else { %>
+<div class="empty-state">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+  <h3>No notifications found</h3>
+  <p>Try adjusting your filters or search query</p>
+</div>
+<% } %>
+
+<%- include('layouts/footer') %>

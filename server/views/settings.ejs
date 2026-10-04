@@ -1,0 +1,67 @@
+<%- include('layouts/header') %>
+
+<div class="card mb-24 animate-in">
+  <div class="card-header">
+    <h3 class="card-title">Server Configuration</h3>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label">Server Version</div>
+      <div class="detail-value">1.0.0</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Database</div>
+      <div class="detail-value">SQLite (WAL mode)</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">API Version</div>
+      <div class="detail-value">v1</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Dashboard Auth</div>
+      <div class="detail-value">Session-based</div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-24 animate-in">
+  <div class="card-header">
+    <h3 class="card-title">API Endpoints</h3>
+  </div>
+  <div class="table-container" style="border:none">
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Endpoint</th>
+          <th>Auth</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-success">POST</span></td><td class="font-mono text-sm">/api/v1/devices/register</td><td>None</td><td>Register device</td></tr>
+        <tr><td><span class="badge badge-info">POST</span></td><td class="font-mono text-sm">/api/v1/notifications/batch</td><td>Device Token</td><td>Batch sync (idempotent)</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/notifications</td><td>Dashboard</td><td>List notifications</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/notifications/:id</td><td>Dashboard</td><td>Notification detail</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/apps</td><td>Dashboard</td><td>List apps</td></tr>
+        <tr><td><span class="badge badge-success">POST</span></td><td class="font-mono text-sm">/api/v1/apps</td><td>Dashboard</td><td>Add app</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/devices</td><td>Dashboard</td><td>List devices</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/device-apps</td><td>Dashboard</td><td>Device app configs</td></tr>
+        <tr><td><span class="badge badge-primary">GET</span></td><td class="font-mono text-sm">/api/v1/stats</td><td>Dashboard</td><td>Statistics</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card animate-in">
+  <div class="card-header">
+    <h3 class="card-title">About</h3>
+  </div>
+  <p style="color:var(--text-secondary);line-height:1.8">
+    <strong>Veyra Notification Monitor</strong> is a platform for capturing, storing, filtering, processing,
+    and forwarding notifications from selected Android applications. It is designed to be app-agnostic,
+    offline-first, configurable per device, and reliable.
+  </p>
+</div>
+
+<%- include('layouts/footer') %>

@@ -1,0 +1,107 @@
+<%- include('layouts/header') %>
+
+<div class="stats-grid mb-24">
+  <div class="stat-card animate-in">
+    <div class="stat-label">Total Notifications</div>
+    <div class="stat-value"><%= dashboard.totals.total_notifications.toLocaleString() %></div>
+  </div>
+  <div class="stat-card animate-in">
+    <div class="stat-label">Applications</div>
+    <div class="stat-value"><%= dashboard.totals.total_apps %></div>
+  </div>
+  <div class="stat-card animate-in">
+    <div class="stat-label">Online Devices</div>
+    <div class="stat-value"><%= dashboard.totals.online_devices %> / <%= dashboard.totals.total_devices %></div>
+  </div>
+</div>
+
+<div class="section-header">
+  <h2 class="section-title">Category Breakdown</h2>
+</div>
+
+<% if (dashboard.categories.length > 0) { %>
+<div class="today-apps mb-24">
+  <% for (const c of dashboard.categories) { %>
+    <div class="today-app-item">
+      <span class="today-app-name"><%= c.category || 'OTHER' %></span>
+      <span class="today-app-count"><%= c.count %></span>
+    </div>
+  <% } %>
+</div>
+<% } else { %>
+<div class="empty-state mb-24"><p>No data yet</p></div>
+<% } %>
+
+<div class="section-header">
+  <h2 class="section-title">Per-Application Statistics</h2>
+</div>
+
+<% if (appStats.length > 0) { %>
+<div class="table-container mb-24 animate-in">
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Package</th>
+        <th>Total Notifs</th>
+        <th>Today</th>
+        <th>Active Devices</th>
+        <th>Last Notification</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const a of appStats) { %>
+        <tr>
+          <td style="font-weight:600;color:var(--text-primary)"><%= a.app_name %></td>
+          <td class="font-mono text-sm"><%= a.package_name %></td>
+          <td><%= a.total_notifications %></td>
+          <td><%= a.today_count %></td>
+          <td><%= a.active_devices %></td>
+          <td style="white-space:nowrap"><%= a.last_notification ? new Date(a.last_notification).toLocaleString() : '—' %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% } else { %>
+<div class="empty-state mb-24"><p>No application data yet</p></div>
+<% } %>
+
+<div class="section-header">
+  <h2 class="section-title">Per-Device Statistics</h2>
+</div>
+
+<% if (deviceStats.length > 0) { %>
+<div class="table-container animate-in">
+  <table>
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>Model</th>
+        <th>Status</th>
+        <th>Total Notifs</th>
+        <th>Today</th>
+        <th>Active Apps</th>
+        <th>Last Seen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const d of deviceStats) { %>
+        <tr onclick="window.location='/devices/<%= d.id %>'">
+          <td style="font-weight:600;color:var(--text-primary)"><%= d.device_name %></td>
+          <td><%= d.device_model || '—' %></td>
+          <td><span class="badge <%= d.status === 'online' ? 'badge-success' : 'badge-neutral' %>"><%= d.status %></span></td>
+          <td><%= d.total_notifications %></td>
+          <td><%= d.today_count %></td>
+          <td><%= d.active_apps %></td>
+          <td style="white-space:nowrap"><%= d.last_seen_at ? new Date(d.last_seen_at).toLocaleString() : '—' %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% } else { %>
+<div class="empty-state"><p>No device data yet</p></div>
+<% } %>
+
+<%- include('layouts/footer') %>

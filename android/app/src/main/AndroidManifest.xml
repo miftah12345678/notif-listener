@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.veyra.notifmonitor">
+
+    <!-- Network constraints for SyncWorker -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- No QUERY_ALL_PACKAGES permission added -->
+
+    <!-- backup policy defined clearly -->
+    <application
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:label="Veyra Monitor">
+
+        <service
+            android:name=".service.VeyraNotificationListenerService"
+            android:exported="true"
+            android:label="Veyra Notification Service"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

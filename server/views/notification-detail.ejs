@@ -1,0 +1,77 @@
+<%- include('layouts/header') %>
+
+<a href="/notifications" class="back-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+  Back to Notifications
+</a>
+
+<div class="detail-grid">
+  <div class="detail-item animate-in">
+    <div class="detail-label">Application</div>
+    <div class="detail-value"><%= notif.app_name || notif.package_name %></div>
+  </div>
+  <div class="detail-item animate-in">
+    <div class="detail-label">Package</div>
+    <div class="detail-value font-mono text-sm"><%= notif.package_name %></div>
+  </div>
+  <div class="detail-item animate-in">
+    <div class="detail-label">Device</div>
+    <div class="detail-value"><%= notif.device_name || '—' %> <%= notif.device_model ? '(' + notif.device_model + ')' : '' %></div>
+  </div>
+  <div class="detail-item animate-in">
+    <div class="detail-label">Received</div>
+    <div class="detail-value"><%= notif.posted_at ? new Date(notif.posted_at).toLocaleString() : '—' %></div>
+  </div>
+  <div class="detail-item animate-in">
+    <div class="detail-label">Category</div>
+    <div class="detail-value"><span class="badge badge-neutral"><%= notif.category || 'OTHER' %></span></div>
+  </div>
+  <div class="detail-item animate-in">
+    <div class="detail-label">Fingerprint</div>
+    <div class="detail-value font-mono text-sm" style="word-break:break-all"><%= notif.fingerprint %></div>
+  </div>
+</div>
+
+<div class="detail-section animate-in">
+  <div class="detail-section-title">Notification Content</div>
+  <div class="detail-body">
+    <div class="mb-16">
+      <div class="detail-label">Title</div>
+      <div style="font-size:1.1rem;font-weight:600;color:var(--text-primary)"><%= notif.title || '(no title)' %></div>
+    </div>
+    <div>
+      <div class="detail-label">Text</div>
+      <div style="color:var(--text-secondary)"><%= notif.text || '(no text)' %></div>
+    </div>
+  </div>
+</div>
+
+<% if (notif.parsed_data) { %>
+<div class="detail-section animate-in">
+  <div class="detail-section-title">Parsed Data</div>
+  <div class="raw-json"><%= JSON.stringify(JSON.parse(notif.parsed_data), null, 2) %></div>
+</div>
+<% } %>
+
+<% if (notif.raw_extras) { %>
+<div class="detail-section animate-in">
+  <div class="detail-section-title">Raw Extras</div>
+  <div class="raw-json"><%= JSON.stringify(JSON.parse(notif.raw_extras), null, 2) %></div>
+</div>
+<% } %>
+
+<div class="detail-section animate-in">
+  <div class="detail-section-title">Metadata</div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label">Notification ID</div>
+      <div class="detail-value font-mono text-sm"><%= notif.id %></div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Server Received</div>
+      <div class="detail-value"><%= notif.received_at ? new Date(notif.received_at).toLocaleString() : '—' %></div>
+    </div>
+  </div>
+</div>
+
+<%- include('layouts/footer') %>

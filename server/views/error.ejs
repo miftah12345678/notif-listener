@@ -1,0 +1,9 @@
+<%- include('layouts/header') %>
+
+<div class="error-page">
+  <h2>Oops!</h2>
+  <p><%= typeof message !== 'undefined' ? message : 'Something went wrong' %></p>
+  <a href="/" class="btn btn-primary">Back to Dashboard</a>
+</div>
+
+<%- include('layouts/footer') %>
