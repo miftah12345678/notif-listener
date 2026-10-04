@@ -13,6 +13,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.room.withTransaction
 
 /**
  * Handles the business logic of filtering, sanitizing, and persisting
@@ -68,7 +69,7 @@ class NotificationProcessor(
         
         if (config == null || !config.enabled || config.captureMode == "DISABLED") {
             // Drop event silently. Do not track.
-            return@withContext
+            return
         }
 
         // 2. Discover App (Track catalog)
@@ -92,7 +93,7 @@ class NotificationProcessor(
 
         // 4. Privacy Filtering & Parsing
         val sanitizedExtras: String?
-        val parsedData: String? = null // Placeholder for ParserRegistry integration
+        var parsedData: String? = null // Placeholder for ParserRegistry integration
         val finalTitle: String?
         val finalText: String?
 
@@ -131,7 +132,7 @@ class NotificationProcessor(
 
         // 6. Transactional Insert
         var inserted = false
-        db.runInTransaction {
+        db.withTransaction {
             val configDao = db.configDao() // Re-verify config in tx if needed
             val insertedId = db.notificationDao().insertEvent(entity)
             if (insertedId != -1L) {
