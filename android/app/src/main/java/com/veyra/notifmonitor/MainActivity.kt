@@ -9,9 +9,13 @@ import com.veyra.notifmonitor.ui.theme.VeyraTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        val app = application as VeyraApplication
+        val hasCredentials = app.secureStorage.getDeviceToken() != null
+        
         setContent {
             VeyraTheme {
-                VeyraApp()
+                VeyraApp(hasCredentials)
             }
         }
     }

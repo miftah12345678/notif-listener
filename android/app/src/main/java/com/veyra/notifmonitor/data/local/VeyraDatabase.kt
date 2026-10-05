@@ -115,12 +115,33 @@ interface NotificationDao {
 
     @Query("UPDATE notification_events SET syncState = 'PENDING', claimId = null, claimedAt = null WHERE syncState = 'FAILED'")
     suspend fun manualRetryAll()
+
+    @Query("SELECT COUNT(*) FROM notification_events WHERE syncState = 'PENDING'")
+    fun getPendingCount(): kotlinx.coroutines.flow.Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM notification_events WHERE syncState = 'SYNCING'")
+    fun getSyncingCount(): kotlinx.coroutines.flow.Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM notification_events WHERE syncState = 'FAILED'")
+    fun getFailedCount(): kotlinx.coroutines.flow.Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM notification_events WHERE syncState = 'SYNCED'")
+    fun getSyncedCount(): kotlinx.coroutines.flow.Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM notification_events")
+    fun getTotalCount(): kotlinx.coroutines.flow.Flow<Int>
+
+    @Query("SELECT * FROM notification_events ORDER BY receivedAt DESC")
+    fun getAllNotificationsDesc(): kotlinx.coroutines.flow.Flow<List<NotificationEvent>>
 }
 
 @Dao
 interface AppCatalogDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertApp(app: LocalApplication)
+    
+    @Query("SELECT * FROM local_applications ORDER BY appName ASC")
+    fun getAllApps(): kotlinx.coroutines.flow.Flow<List<LocalApplication>>
 }
 
 // ======================== DATABASE ========================
@@ -140,3 +161,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
     abstract fun appCatalogDao(): AppCatalogDao
 }
+
+

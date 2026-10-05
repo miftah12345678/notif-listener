@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.veyra.notifmonitor.ui.screens.*
 
 @Composable
-fun VeyraApp() {
+fun VeyraApp(hasCredentials: Boolean) {
     val navController = rememberNavController()
     
     val items = listOf(
@@ -50,9 +50,10 @@ fun VeyraApp() {
             }
         }
     ) { innerPadding ->
+        val startDest = if (hasCredentials) "home" else "setup"
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = startDest,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("setup") { SetupScreen(navController) }

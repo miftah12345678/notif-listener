@@ -9,36 +9,24 @@ import com.veyra.notifmonitor.VeyraApplication
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
-            HomeViewModel(
-                notificationRepository = application.notificationRepository,
-                secureStorage = application.secureStorage
-            )
+            val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
+            HomeViewModel(app.notificationRepository, app.deviceCredentialStore)
         }
         initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
-            NotificationsViewModel(
-                notificationRepository = application.notificationRepository
-            )
+            val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
+            NotificationsViewModel(app.notificationRepository)
         }
         initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
-            ApplicationsViewModel(
-                configRepository = application.configRepository
-            )
+            val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
+            ApplicationsViewModel(app.configRepository)
         }
         initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
-            SettingsViewModel(
-                secureStorage = application.secureStorage,
-                notificationRepository = application.notificationRepository
-            )
+            val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
+            SettingsViewModel(app.deviceCredentialStore, app.notificationRepository)
         }
         initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
-            SetupViewModel(
-                secureStorage = application.secureStorage
-            )
+            val app = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as VeyraApplication)
+            SetupViewModel(app.deviceCredentialStore, app.apiClient, app.configRepository)
         }
     }
 }

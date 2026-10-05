@@ -1,27 +1,31 @@
 package com.veyra.notifmonitor
 
 import android.app.Application
-import com.veyra.notifmonitor.data.local.VeyraDatabase
+import com.veyra.notifmonitor.data.local.AppDatabase
 import com.veyra.notifmonitor.data.repository.NotificationRepository
 import com.veyra.notifmonitor.data.repository.DeviceConfigRepository
-import com.veyra.notifmonitor.data.remote.VeyraApiClient
-import com.veyra.notifmonitor.data.security.SecureStorage
+import com.veyra.notifmonitor.data.repository.SyncRepository
+import com.veyra.notifmonitor.data.remote.ApiClient
+import com.veyra.notifmonitor.data.security.DeviceCredentialStore
 
 class VeyraApplication : Application() {
 
-    lateinit var database: VeyraDatabase
+    lateinit var database: AppDatabase
     lateinit var notificationRepository: NotificationRepository
     lateinit var configRepository: DeviceConfigRepository
-    lateinit var secureStorage: SecureStorage
+    lateinit var syncRepository: SyncRepository
+    lateinit var deviceCredentialStore: DeviceCredentialStore
+    lateinit var apiClient: ApiClient
 
     override fun onCreate() {
         super.onCreate()
         
-        secureStorage = SecureStorage(this)
-        database = VeyraDatabase.getDatabase(this)
+        deviceCredentialStore = DeviceCredentialStore(this)
+        database = AppDatabase.getDatabase(this)
+        apiClient = ApiClient(deviceCredentialStore)
         
-        val apiClient = VeyraApiClient()
-        notificationRepository = NotificationRepository(database.notificationDao(), apiClient, secureStorage)
-        configRepository = DeviceConfigRepository(database.deviceAppConfigDao(), apiClient, secureStorage)
+        notificationRepository = NotificationRepository(database.notificationDao())
+        configRepository = DeviceConfigRepository(database.configDao(), database.appCatalogDao(), apiClient)
+        syncRepository = SyncRepository(this, database)
     }
 }
