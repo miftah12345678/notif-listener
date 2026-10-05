@@ -9,9 +9,22 @@
 
     <!-- backup policy defined clearly -->
     <application
+        android:name=".VeyraApplication"
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:label="Veyra Monitor">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".service.VeyraNotificationListenerService"
@@ -26,4 +39,3 @@
     </application>
 
 </manifest>
-
