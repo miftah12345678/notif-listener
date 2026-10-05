@@ -1,0 +1,49 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x android/gradlew
+      continue-on-error: true
+
+    - name: Extract local Gradle Wrapper if gradlew missing
+      run: |
+        if [ ! -f "android/gradlew" ] && [ -f "gradle.zip" ]; then
+          unzip gradle.zip -d android/
+        fi
+      
+    - name: Build with Gradle
+      working-directory: ./android
+      run: |
+        if [ -f "gradlew" ]; then
+          ./gradlew assembleDebug
+        elif [ -d "gradle-8.2" ]; then
+          ./gradle-8.2/bin/gradle assembleDebug
+        else
+          gradle assembleDebug
+        fi
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug
+        path: android/app/build/outputs/apk/debug/app-debug.apk
