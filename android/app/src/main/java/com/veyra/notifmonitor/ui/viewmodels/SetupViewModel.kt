@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.veyra.notifmonitor.data.remote.ApiClient
 import com.veyra.notifmonitor.data.repository.DeviceConfigRepository
-import com.veyra.notifmonitor.data.security.SecureStorage
+import com.veyra.notifmonitor.data.security.DeviceCredentialStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ sealed class SetupState {
 }
 
 class SetupViewModel(
-    private val secureStorage: SecureStorage,
+    private val deviceCredentialStore: DeviceCredentialStore,
     private val apiClient: ApiClient,
     private val configRepository: DeviceConfigRepository
 ) : ViewModel() {
@@ -36,8 +36,8 @@ class SetupViewModel(
                 }
                 val baseUrl = if (url.endsWith("/")) url else "/"
                 // Just save the token and URL
-                secureStorage.saveDeviceToken(token)
-                secureStorage.saveBaseUrl(baseUrl)
+                deviceCredentialStore.saveCredentials(baseUrl, token, "local-device")
+                
                 
                 // Fetch config
                 configRepository.fetchAndSaveConfig()
@@ -48,3 +48,4 @@ class SetupViewModel(
         }
     }
 }
+

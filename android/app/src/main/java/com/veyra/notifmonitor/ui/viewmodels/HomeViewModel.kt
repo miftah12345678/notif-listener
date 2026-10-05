@@ -41,7 +41,7 @@ class HomeViewModel(
                     pendingCount = pending,
                     failedCount = failed,
                     syncedCount = synced,
-                    authState = if (deviceCredentialStore.getDeviceToken() != null) "AUTHENTICATED" else "AUTH_ERROR"
+                    authState = if (deviceCredentialStore.getToken() != null) "AUTHENTICATED" else "AUTH_ERROR"
                 )
             }.collect { state ->
                 _uiState.value = state
@@ -49,3 +49,4 @@ class HomeViewModel(
         }
     }
 }
+

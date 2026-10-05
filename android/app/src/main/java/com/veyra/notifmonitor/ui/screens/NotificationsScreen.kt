@@ -37,7 +37,7 @@ fun NotificationsScreen(
                 items(uiState.events) { event ->
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text(event.appName ?: event.packageName, style = MaterialTheme.typography.titleMedium)
+                            Text(event.packageName, style = MaterialTheme.typography.titleMedium)
                             if (event.title != null) {
                                 Text(event.title, style = MaterialTheme.typography.bodyLarge)
                             }
@@ -56,3 +56,4 @@ fun NotificationsScreen(
         }
     }
 }
+

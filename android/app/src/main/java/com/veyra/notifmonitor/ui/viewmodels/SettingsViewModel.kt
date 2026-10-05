@@ -20,14 +20,15 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState(
-        isConnected = deviceCredentialStore.getDeviceToken() != null,
-        deviceToken = deviceCredentialStore.getDeviceToken()
+        isConnected = deviceCredentialStore.getToken() != null,
+        deviceToken = deviceCredentialStore.getToken()
     ))
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     fun disconnectDevice() {
         // Simple disconnect logic for local UI
-        deviceCredentialStore.clearCredentials()
+        deviceCredentialStore.clear()
         _uiState.value = _uiState.value.copy(isConnected = false, deviceToken = null)
     }
 }
+
