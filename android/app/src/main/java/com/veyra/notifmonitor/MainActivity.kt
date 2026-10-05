@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         val app = application as VeyraApplication
-        val hasCredentials = app.secureStorage.getDeviceToken() != null
+        val hasCredentials = app.deviceCredentialStore.isProvisioned()
         
         setContent {
             VeyraTheme {
@@ -20,4 +20,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
